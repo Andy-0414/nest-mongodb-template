@@ -17,8 +17,6 @@ export class UserService {
     }
 
     async findByEmail(email: string): Promise<UserDocument | null> {
-        return (
-            ((await this.userSchema.findOne({ email })) as UserDocument) || null
-        );
+        return this.userSchema.findOne<UserDocument>({ email }) || null;
     }
 }

@@ -30,7 +30,7 @@ let UserService = class UserService {
         return this.userSchema.findById(userObjectId);
     }
     async findByEmail(email) {
-        return ((await this.userSchema.findOne({ email })) || null);
+        return this.userSchema.findOne({ email }) || null;
     }
 };
 UserService = __decorate([
