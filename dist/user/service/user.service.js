@@ -21,16 +21,25 @@ let UserService = class UserService {
     constructor(userSchema) {
         this.userSchema = userSchema;
     }
-    findAll() {
+    async findAll() {
         return this.userSchema.find();
     }
-    findOne(userObjectId) {
+    async findOne(userObjectId) {
         if (!(0, mongoose_2.isValidObjectId)(userObjectId))
             return null;
         return this.userSchema.findById(userObjectId);
     }
     async findByEmail(email) {
-        return this.userSchema.findOne({ email }) || null;
+        return this.userSchema.findOne({ email }, "+password");
+    }
+    async createOne(userDto) {
+        try {
+            const user = await new this.userSchema(userDto).save();
+            return user;
+        }
+        catch (err) {
+            return null;
+        }
     }
 };
 UserService = __decorate([

@@ -3,11 +3,14 @@ import { Document, Model } from "mongoose";
 
 @Schema()
 export class User {
-    @Prop()
+    @Prop({ unique: true, index: true })
     email: string;
 
-    @Prop()
+    @Prop({ select: false })
     password: string;
+
+    @Prop({ select: false })
+    salt: string;
 }
 
 export type UserDocument = User & Document;

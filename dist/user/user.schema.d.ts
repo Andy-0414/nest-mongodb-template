@@ -23,6 +23,7 @@ import { Document, Model } from "mongoose";
 export declare class User {
     email: string;
     password: string;
+    salt: string;
 }
 export declare type UserDocument = User & Document;
 export declare type UserModel = User & Model<UserDocument>;
