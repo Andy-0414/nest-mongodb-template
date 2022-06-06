@@ -20,18 +20,19 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose" />
-import { UserService } from "./service/user.service";
-export declare class UserController {
-    private readonly userService;
-    constructor(userService: UserService);
-    findAll(): import("mongoose").Query<(import("./user.schema").User & import("mongoose").Document<any, any, any> & {
+import { User, UserDocument, UserModel } from "../user.schema";
+export declare class UserService {
+    private userSchema;
+    constructor(userSchema: UserModel);
+    findAll(): import("mongoose").Query<(User & import("mongoose").Document<any, any, any> & {
         _id: any;
-    })[], import("./user.schema").User & import("mongoose").Document<any, any, any> & {
+    })[], User & import("mongoose").Document<any, any, any> & {
         _id: any;
-    }, {}, import("./user.schema").UserDocument>;
-    findOne(_id: string): import("mongoose").Query<import("./user.schema").User & import("mongoose").Document<any, any, any> & {
+    }, {}, UserDocument>;
+    findOne(userObjectId: string): import("mongoose").Query<User & import("mongoose").Document<any, any, any> & {
         _id: any;
-    }, import("./user.schema").User & import("mongoose").Document<any, any, any> & {
+    }, User & import("mongoose").Document<any, any, any> & {
         _id: any;
-    }, {}, import("./user.schema").UserDocument>;
+    }, {}, UserDocument>;
+    findByEmail(email: string): Promise<UserDocument | null>;
 }

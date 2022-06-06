@@ -12,36 +12,31 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
+exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
-const user_service_1 = require("./service/user.service");
-let UserController = class UserController {
-    constructor(userService) {
-        this.userService = userService;
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
+const user_schema_1 = require("../user.schema");
+let UserService = class UserService {
+    constructor(userSchema) {
+        this.userSchema = userSchema;
     }
     findAll() {
-        return this.userService.findAll();
+        return this.userSchema.find();
     }
-    findOne(_id) {
-        return this.userService.findOne(_id);
+    findOne(userObjectId) {
+        if (!(0, mongoose_2.isValidObjectId)(userObjectId))
+            return null;
+        return this.userSchema.findById(userObjectId);
+    }
+    async findByEmail(email) {
+        return ((await this.userSchema.findOne({ email })) || null);
     }
 };
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], UserController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Get)(":_id"),
-    __param(0, (0, common_1.Param)("_id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], UserController.prototype, "findOne", null);
-UserController = __decorate([
-    (0, common_1.Controller)("user"),
-    __metadata("design:paramtypes", [user_service_1.UserService])
-], UserController);
-exports.UserController = UserController;
-//# sourceMappingURL=user.controller.js.map
+UserService = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __metadata("design:paramtypes", [Object])
+], UserService);
+exports.UserService = UserService;
+//# sourceMappingURL=user.service.js.map
