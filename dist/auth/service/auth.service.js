@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("../../user/service/user.service");
+const bcrypt = require("bcrypt");
 let AuthService = class AuthService {
     constructor(usersService) {
         this.usersService = usersService;
@@ -20,7 +21,7 @@ let AuthService = class AuthService {
         const user = await this.usersService.findByEmail(email);
         if (!user)
             return null;
-        if (user.password != password)
+        if (!(await bcrypt.compare(password, user.password)))
             return null;
         return user;
     }

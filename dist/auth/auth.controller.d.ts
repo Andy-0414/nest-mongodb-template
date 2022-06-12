@@ -13,4 +13,5 @@ export declare class AuthController {
     register(authRegisterDto: AuthRegisterDto): Promise<{
         accessToken: string;
     }>;
+    profile(req: any): Promise<any>;
 }

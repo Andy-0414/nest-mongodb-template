@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const user_service_1 = require("../../user/service/user.service");
 const auth_login_service_1 = require("./auth.login.service");
+const bcrypt = require("bcrypt");
 let AuthRegisterService = class AuthRegisterService {
     constructor(jwtService, userService, authLoginService) {
         this.jwtService = jwtService;
@@ -21,7 +22,19 @@ let AuthRegisterService = class AuthRegisterService {
         this.authLoginService = authLoginService;
     }
     async register(email, password) {
-        return this.authLoginService.login(await this.userService.createOne({ email, password }));
+        const passwordHash = await bcrypt.hash(password, 10);
+        try {
+            const user = await this.userService.createOne({
+                email,
+                password: passwordHash,
+            });
+            if (!user)
+                throw null;
+            return this.authLoginService.login(user);
+        }
+        catch (err) {
+            throw new common_1.HttpException("Bad request", common_1.HttpStatus.BAD_REQUEST);
+        }
     }
 };
 AuthRegisterService = __decorate([

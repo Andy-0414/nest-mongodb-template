@@ -9,26 +9,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LocalStrategy = void 0;
-const passport_local_1 = require("passport-local");
+exports.JwtStrategy = void 0;
+const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
-const auth_service_1 = require("../service/auth.service");
-let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)(passport_local_1.Strategy) {
-    constructor(authService) {
-        super({ usernameField: "email" });
-        this.authService = authService;
+const auth_constant_1 = require("../auth.constant");
+const user_service_1 = require("../../user/service/user.service");
+let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
+    constructor(userService) {
+        super({
+            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: auth_constant_1.AUTH.JWT_SECRET,
+        });
+        this.userService = userService;
     }
-    async validate(email, password) {
-        const user = await this.authService.validateLocalUser(email, password);
+    async validate(payload) {
+        const user = this.userService.findOne(payload.sub);
         if (!user)
             throw new common_1.UnauthorizedException();
         return user;
     }
 };
-LocalStrategy = __decorate([
+JwtStrategy = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
-], LocalStrategy);
-exports.LocalStrategy = LocalStrategy;
-//# sourceMappingURL=local.strategy.js.map
+    __metadata("design:paramtypes", [user_service_1.UserService])
+], JwtStrategy);
+exports.JwtStrategy = JwtStrategy;
+//# sourceMappingURL=jwt.strategy.js.map

@@ -21,8 +21,9 @@ let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)
     }
     async validate(email, password) {
         const user = await this.authService.validateLocalUser(email, password);
-        if (!user)
+        if (!user) {
             throw new common_1.UnauthorizedException();
+        }
         return user;
     }
 };
@@ -31,4 +32,4 @@ LocalStrategy = __decorate([
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], LocalStrategy);
 exports.LocalStrategy = LocalStrategy;
-//# sourceMappingURL=local.strategy.js.map
+//# sourceMappingURL=local.strategy%20copy.js.map
