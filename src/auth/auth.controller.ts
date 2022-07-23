@@ -1,4 +1,6 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Param, Post, Request, UseGuards } from "@nestjs/common";
+import { UserDocument } from "src/user/user.schema";
+import { Auth, CurrentUser } from "./auth.decorator";
 import { AuthRegisterDto } from "./dto/auth.register.dto";
 import { JwtAuthGuard } from "./guard/auth.jwt.guard";
 import { LocalAuthGuard } from "./guard/auth.local.guard";
@@ -8,11 +10,7 @@ import { AuthService } from "./service/auth.service";
 
 @Controller("auth")
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        private authLoginService: AuthLoginService,
-        private authRegisterService: AuthRegisterService
-    ) {}
+    constructor(private authService: AuthService, private authLoginService: AuthLoginService, private authRegisterService: AuthRegisterService) {}
 
     @UseGuards(LocalAuthGuard)
     @Post("login")
@@ -22,15 +20,12 @@ export class AuthController {
 
     @Post("register")
     async register(@Body() authRegisterDto: AuthRegisterDto) {
-        return this.authRegisterService.register(
-            authRegisterDto.email,
-            authRegisterDto.password
-        );
+        return this.authRegisterService.register(authRegisterDto.email, authRegisterDto.password);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @Auth()
     @Post("profile")
-    async profile(@Request() req) {
-        return req.user;
+    async profile(@CurrentUser() user: UserDocument) {
+        return user;
     }
 }
